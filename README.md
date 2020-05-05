@@ -23,10 +23,10 @@
  密码: test123@   
  
 ## 项目功能截图
-![图一](https://gitee.com/idart/Daily/blob/master/static/image/111111.png) 
+![图一](https://github.com/colinshin/Daily/blob/master/static/image/111111.png) 
   
-![图二](https://gitee.com/idart/Daily/blob/master/static/image/222222222.png)  
+![图二](https://github.com/colinshin/Daily/blob/master/static/image/222222222.png)  
 
-![图三](https://gitee.com/idart/Daily/blob/master/static/image/33333333.png) 
+![图三](https://github.com/colinshin/Daily/blob/master/static/image/33333333.png) 
  
-![图四](https://gitee.com/idart/Daily/blob/master/static/image/444444444.png)  
+![图四](https://github.com/colinshin/Daily/blob/master/static/image/444444444.png)  
