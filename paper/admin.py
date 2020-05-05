@@ -12,7 +12,7 @@ admin.site.site_header = "Daily Report"
 
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'employee_no', 'name', 'business_direction', 'task_progress', 'tomorrow_task', 'group']
+    list_display = ['name', 'department', 'employee_no', 'business_direction', 'task_progress', 'tomorrow_task', 'group']
     actions = ['export_excel']
     search_fields = ['name', 'employee_no']
 
