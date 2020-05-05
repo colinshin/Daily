@@ -23,10 +23,10 @@
  密码: test123@   
  
 ## 项目功能截图
-![图一](https://github.com/colinshin/Daily/blob/master/static/image/111111.png) 
+![图一](https://oscimg.oschina.net/oscnet/up-4071d4ad205e96e6d2e3ff5851601c3f74c.png) 
   
-![图二](https://github.com/colinshin/Daily/blob/master/static/image/222222222.png)  
+![图二](https://oscimg.oschina.net/oscnet/up-de3b5c8cee25d7f0eab01757a99dec0483a.png)  
 
-![图三](https://github.com/colinshin/Daily/blob/master/static/image/33333333.png) 
+![图三](https://oscimg.oschina.net/oscnet/up-fb68f02c7f3a01af9ab632d65c2ea0ea1b1.png) 
  
-![图四](https://github.com/colinshin/Daily/blob/master/static/image/444444444.png)  
+![图四](https://oscimg.oschina.net/oscnet/up-53cef04bf46e60933357146c25d75bab8f8.png)  
