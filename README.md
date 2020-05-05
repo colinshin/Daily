@@ -16,7 +16,17 @@
    期待大家的反馈，如果发现问题可以提issue, 欢迎star
 
  ## 使用
- 登陆 127.0.0.1:8000/admin/login
+ 登陆 http://127.0.0.1:8000/admin/login
+ 
  账号: admin
+ 
  密码: test123@   
+ 
+## 项目功能截图
+![图一](https://github.com/colinshin/Daily/blob/master/static/image/111111.png) 
   
+![图二](https://github.com/colinshin/Daily/blob/master/static/image/222222222.png)  
+
+![图三](https://github.com/colinshin/Daily/blob/master/static/image/33333333.png) 
+ 
+![图四](https://github.com/colinshin/Daily/blob/master/static/image/444444444.png)  
