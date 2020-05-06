@@ -1,7 +1,7 @@
 # Daily
 
 ## 项目介绍
-   Daily 使用python3 Django sqlite 实现的简单的日报记录和汇总功能。
+   Daily 使用python3 Django mysql 实现的简单的日报记录和汇总功能。
    
 ## 已经实现功能   
    1、目前实现了人员的新增，编辑和删除，赋权
