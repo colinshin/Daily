@@ -7,7 +7,7 @@ class Department(models.Model):
     leader = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, verbose_name='部门主管',
                                on_delete=models.DO_NOTHING)
     super_department = models.ForeignKey('self', null=True, on_delete=models.DO_NOTHING,
-                                         default=0, verbose_name='父级部门', related_name='children')
+                                         default=None, verbose_name='父级部门', related_name='children')
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 
@@ -28,13 +28,43 @@ class Department(models.Model):
         verbose_name = "部门"
 
 
+class Group(models.Model):
+    """ 业务组 """
+    name = models.CharField(max_length=32, null=False, unique=True, verbose_name='名称')
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        # 复数形式，如果只设置verbose_name，在Admin会显示为“产品信息s”
+        verbose_name_plural = "业务组"
+        verbose_name = "业务组"
+
+
+class Direction(models.Model):
+    """ 方向 """
+    name = models.CharField(max_length=32, null=False, unique=True, verbose_name='名称')
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        # 复数形式，如果只设置verbose_name，在Admin会显示为“产品信息s”
+        verbose_name_plural = "方向"
+        verbose_name = "方向"
+
+
 class Record(models.Model):
     name = models.CharField(max_length=100, null=False, verbose_name='姓名')
     employee_no = models.CharField(max_length=80, null=False, verbose_name='工号')
-    business_direction = models.CharField(max_length=100, null=False, verbose_name='方向')
+    direction = models.ForeignKey(Direction, on_delete=models.DO_NOTHING, null=False, verbose_name='方向')
     task_progress = models.TextField(max_length=200, null=False, verbose_name='工作进度')
     tomorrow_task = models.TextField(max_length=200, verbose_name='明日计划')
-    group = models.CharField(max_length=200, null=False, verbose_name='业务组')
+    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING,  null=False, verbose_name='业务组')
     department = models.ForeignKey(Department,  on_delete=models.CASCADE, null=False, verbose_name='部门')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, verbose_name='创建人', on_delete=models.DO_NOTHING)
     pub_date = models.DateField('日报日期')
@@ -50,7 +80,7 @@ class Record(models.Model):
         verbose_name = "日报"
 
 
-# class Menu(models.Model):
+#    class Menu(models.Model):
 #     """ 菜单表"""
 #     caption = models.CharField(max_length=32)
 #     parent = models.ForeignKey('Menu', null=True, blank=True, on_delete=models.DO_NOTHING)  # 自关联

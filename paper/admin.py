@@ -4,7 +4,7 @@ import xlwt
 from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.http import urlquote
-from .models import Record, Department
+from .models import Record, Department, Direction, Group
 
 admin.site.site_title = "Daily Report"
 admin.site.site_header = "Daily Report"
@@ -12,11 +12,25 @@ admin.site.site_header = "Daily Report"
 
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['name', 'department', 'employee_no', 'business_direction', 'task_progress', 'tomorrow_task', 'group']
+    list_display = ['name', 'department', 'employee_no', 'direction', 'task_progress', 'tomorrow_task',
+                    'group']
     actions = ['export_excel']
-    search_fields = ['name', 'employee_no']
+    search_fields = ['name', 'employee_no', 'pub_date']
 
-    def has_delete_permission(self, request, obj=None):# 禁用删除按钮
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Hook for specifying custom readonly fields.
+        """
+        # 本想用 path 里的 add 来判断
+        print(request.path)
+        # 根据 obj 是否为空来判断
+        if obj:
+            self.readonly_fields = []
+        else:
+            self.readonly_fields = []
+        return self.readonly_fields
+
+    def has_delete_permission(self, request, obj=None):  # 禁用删除按钮
         if request.user.is_superuser:
             return False
         return True
@@ -29,18 +43,18 @@ class RecordAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
         else:
-            department = Department.objects.filter(leader_id=request.user.id).first()
-            if department:
+            departments = Department.objects.filter(leader_id=request.user.id).all().values_list('id', flat=True)
+            if len(departments) > 0:
                 # 是部门负责人
-                return qs.filter(department=department)
+                return qs.filter(department__in=departments)
             else:
                 return qs.filter(creator=request.user)
 
     def export_excel(self, request, queryset):
         str_time = time.strftime("%Y%m%d", time.localtime())
         # field_names = [field.name for field in Record._meta.fields]  # 模型所有字段名
-        field_names = ['id', 'name', 'employee_no', 'business_direction', 'task_progress',
-                       'tomorrow_task', 'pub_date']  # 模型所有字段名
+        field_names = ['name', 'employee_no', 'group', 'task_progress',
+                       'tomorrow_task', 'direction']  # 模型所有字段名  'pub_date'
         field_names2 = ['task_progress', 'tomorrow_task']  # 模型所有字段名
         header_style = xlwt.XFStyle()  # 初始化来样式源百
         font2 = xlwt.Font()  # 为样式创建字体度
@@ -53,27 +67,27 @@ class RecordAdmin(admin.ModelAdmin):
         al2.vert = 0x01  # 设置垂直居中
         header_style.alignment = al2
 
+
         wb = xlwt.Workbook(encoding='utf-8')  # 开始创建excel
         wb_sheet = wb.add_sheet(str(str_time), cell_overwrite_ok=True)  # excel中的表名
         wid1 = wb_sheet.col(0)
-        wid1.width = 50 * 50
+        wid1.width = 70 * 70
         wid2 = wb_sheet.col(1)
-        wid2.width = 50 * 50
+        wid2.width = 70 * 70
         wid3 = wb_sheet.col(2)
-        wid3.width = 50 * 50
+        wid3.width = 70 * 70
         wid4 = wb_sheet.col(3)
-        wid4.width = 50 * 50
+        wid4.width = 120 * 120
         wid5 = wb_sheet.col(4)
         wid5.width = 120 * 120
         wid5 = wb_sheet.col(5)
-        wid5.width = 120 * 120
-        wb_sheet.write(0, 0, '编号', header_style)
-        wb_sheet.write(0, 1, '姓名', header_style)
-        wb_sheet.write(0, 2, '工号', header_style)
-        wb_sheet.write(0, 3, '方向', header_style)
-        wb_sheet.write(0, 4, '任务及进度', header_style)
-        wb_sheet.write(0, 5, '明日计划', header_style)
-        wb_sheet.write(0, 6, '业务组', header_style)
+        wid5.width = 70 * 70
+        wb_sheet.write(0, 0, '姓名', header_style)
+        wb_sheet.write(0, 1, '工号', header_style)
+        wb_sheet.write(0, 2, '方向', header_style)
+        wb_sheet.write(0, 3, '任务及进度', header_style)
+        wb_sheet.write(0, 4, '明日计划', header_style)
+        wb_sheet.write(0, 5, '业务组', header_style)
         style = xlwt.XFStyle()  # 初始化来样式源百
         font = xlwt.Font()  # 为样式创建字体度
         style.font = font  # 设定样式
@@ -83,12 +97,33 @@ class RecordAdmin(admin.ModelAdmin):
         style.alignment = al
         style.alignment.wrap = 1  # 自动知换行
 
+        borders = xlwt.Borders()  # Create borders
+        borders.left = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
+        borders.right = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
+        borders.top = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
+        borders.bottom = xlwt.Borders.MEDIUM  # 添加边框-虚线边框
+        '''
+        May be: NO_LINE, THIN, MEDIUM, DASHED, DOTTED, THICK, DOUBLE, 
+        HAIR, MEDIUM_DASHED, THIN_DASH_DOTTED, MEDIUM_DASH_DOTTED, 
+        THIN_DASH_DOT_DOTTED, MEDIUM_DASH_DOT_DOTTED, SLANTED_MEDIUM_DASH_DOTTED, 
+        or 0x00 through 0x0D.
+        '''
+        borders.left_colour = 0x90  # 边框上色
+        borders.right_colour = 0x90
+        borders.top_colour = 0x90
+        borders.bottom_colour = 0x90
+
+        style.borders = borders
+        header_style.borders = borders
+
+
         style1 = xlwt.XFStyle()  # 初始化来样式源百
         style1.font = font  # 设定样式
         al1 = xlwt.Alignment()
         al1.vert = 0x01  # 设置垂直居中
         style1.alignment = al1
         style1.alignment.wrap = 1  # 自动知换行
+        style1.borders = borders
         tall_style = xlwt.easyxf('font:height 800')  # 36pt
         line = 0
         for obj in queryset:  # 遍历选择的对象列表
@@ -99,7 +134,10 @@ class RecordAdmin(admin.ModelAdmin):
             for field in field_names:
                 each_cell = getattr(obj, field)
                 if field not in field_names2:
-                    wb_sheet.write(line, column, each_cell, style)
+                    if field in ['group', 'direction']:
+                        wb_sheet.write(line, column, each_cell.name, style)
+                    else:
+                        wb_sheet.write(line, column, each_cell, style)
                 else:
                     wb_sheet.write(line, column, each_cell, style1)
                 column = column + 1
@@ -115,18 +153,49 @@ class RecordAdmin(admin.ModelAdmin):
     export_excel.short_description = '导出Excel'
 
     def save_model(self, request, obj, form, change):
+        now_action = self.get_action(request.path)
         if change:  # 更改的时候
             obj.creator = request.user
         super(RecordAdmin, self).save_model(request, obj, form, change)
 
 
-# admin.site.register(Record)
-# admin.site.register(Department)
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'leader', 'super_department']
 
-    def has_delete_permission(self, request, obj=None):# 禁用删除按钮
+    def has_delete_permission(self, request, obj=None):  # 禁用删除按钮
+        if request.user.is_superuser:
+            return True
+        return False
+
+
+@admin.register(Direction)
+class DirectionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+    def has_delete_permission(self, request, obj=None):  # 禁用删除按钮
+        if request.user.is_superuser:
+            return True
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        # 禁用添加按钮
+        if request.user.is_superuser:
+            return True
+        return False
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+    def has_delete_permission(self, request, obj=None):  # 禁用删除按钮
+        if request.user.is_superuser:
+            return True
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        # 禁用添加按钮
         if request.user.is_superuser:
             return True
         return False
