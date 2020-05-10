@@ -4,21 +4,31 @@ import xlwt
 from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.http import urlquote
-from .models import Record, Department, Direction, Group
+from .models import Record, Department, Direction, Group, UserProfile,User
 
 admin.site.site_title = "Daily Report"
 admin.site.site_header = "Daily Report"
 
 
+@admin.register(UserProfile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'employee_no', 'depart', 'group', 'direction')
+
+    # 新增或者修改数据时，设置外键的可选值
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user' and request.user.is_superuser:
+            user_id_list = UserProfile.objects.filter().all().values_list('user_id', flat=True)
+            kwargs["queryset"] = User.objects.exclude(id__in=user_id_list)
+        return super(ProfileAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
-    site_header = ''  # 此处设置页面显示标题
-    site_title = ''  # 此处设置页面头部标题
 
     list_display = ['name', 'department', 'employee_no', 'direction', 'task_progress', 'tomorrow_task',
                     'group', 'pub_date']
     list_filter = ('department',)  # 过滤器
-    exclude = ('creator',)
+    exclude = ('creator', 'name', 'department', 'employee_no', 'direction', 'group')
     actions = ['export_excel']
     search_fields = ['name', 'employee_no', 'pub_date']
 
@@ -159,6 +169,11 @@ class RecordAdmin(admin.ModelAdmin):
         if change:  # 更改的时候
             pass
         else:  # 新增的时候
+            userprofile = UserProfile.objects.filter(user_id=request.user.id).first()
+            obj.name = request.user.username
+            obj.employee_no = userprofile.employee_no
+            obj.department = userprofile.depart
+            obj.group = userprofile.group
             obj.creator = request.user
         super(RecordAdmin, self).save_model(request, obj, form, change)
 

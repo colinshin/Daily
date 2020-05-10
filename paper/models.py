@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Department(models.Model):
     name = models.CharField(max_length=100, null=False, unique=True, verbose_name='部门名称')
-    leader = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, verbose_name='部门主管',
+    leader = models.ForeignKey(User, null=False, verbose_name='部门主管',
                                on_delete=models.DO_NOTHING)
     super_department = models.ForeignKey('self', null=True, on_delete=models.DO_NOTHING,
                                          default=None, verbose_name='父级部门', related_name='children')
@@ -66,7 +66,7 @@ class Record(models.Model):
     tomorrow_task = models.TextField(max_length=200, verbose_name='明日计划')
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING,  null=False, verbose_name='业务组')
     department = models.ForeignKey(Department,  on_delete=models.CASCADE, null=False, verbose_name='部门')
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, verbose_name='创建人', on_delete=models.DO_NOTHING)
+    creator = models.ForeignKey(User, null=False, verbose_name='创建人', on_delete=models.DO_NOTHING)
     pub_date = models.DateField('日报日期')
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
@@ -79,6 +79,24 @@ class Record(models.Model):
         verbose_name_plural = "日报"
         verbose_name = "日报"
 
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', verbose_name="用户")
+    employee_no = models.CharField(max_length=80, null=False, verbose_name='工号')
+    depart = models.ForeignKey(Department,  on_delete=models.CASCADE, null=False, verbose_name='部门')
+    direction = models.ForeignKey(Direction,  on_delete=models.CASCADE, null=False, verbose_name='方向')
+    group = models.ForeignKey(Group,  on_delete=models.CASCADE, null=False, verbose_name='业务组')
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+
+    # 应该加上这步，表示显示时返回的是自定义信息，而不是 object 形式
+    def __unicode__(self):              # __str__ on Python 3
+        return self.user.username
+
+    class Meta:
+        # 复数形式，如果只设置verbose_name，在Admin会显示为“产品信息s”
+        verbose_name_plural = "用户属性"
+        verbose_name = "用户属性"
 
 #    class Menu(models.Model):
 #     """ 菜单表"""
