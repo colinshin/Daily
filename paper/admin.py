@@ -12,8 +12,13 @@ admin.site.site_header = "Daily Report"
 
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
+    site_header = ''  # 此处设置页面显示标题
+    site_title = ''  # 此处设置页面头部标题
+
     list_display = ['name', 'department', 'employee_no', 'direction', 'task_progress', 'tomorrow_task',
-                    'group']
+                    'group', 'pub_date']
+    list_filter = ('department',)  # 过滤器
+    exclude = ('creator',)
     actions = ['export_excel']
     search_fields = ['name', 'employee_no', 'pub_date']
 
@@ -116,7 +121,6 @@ class RecordAdmin(admin.ModelAdmin):
         style.borders = borders
         header_style.borders = borders
 
-
         style1 = xlwt.XFStyle()  # 初始化来样式源百
         style1.font = font  # 设定样式
         al1 = xlwt.Alignment()
@@ -146,15 +150,15 @@ class RecordAdmin(admin.ModelAdmin):
         response = HttpResponse(content_type='application/vnd.ms-excel')
         filename = urlquote('工作日报')  # 导出数据 中文文件名称 变成下载.xls
         response['Content-Disposition'] = 'attachment;filename=%s' % filename + str(str_time) + '.xlsx'
-        # response['Content-Disposition'] = 'attachment;filename=' + str(str_time) +'.xlsx'
         wb.save(response)
         return response
 
     export_excel.short_description = '导出Excel'
 
     def save_model(self, request, obj, form, change):
-        now_action = self.get_action(request.path)
         if change:  # 更改的时候
+            pass
+        else:  # 新增的时候
             obj.creator = request.user
         super(RecordAdmin, self).save_model(request, obj, form, change)
 
