@@ -140,23 +140,40 @@ class RecordAdmin(admin.ModelAdmin):
         style1.borders = borders
         tall_style = xlwt.easyxf('font:height 800')  # 36pt
         line = 0
-        for obj in queryset:  # 遍历选择的对象列表
-            column = 0
-            line = line + 1
-            this_row = wb_sheet.row(line)
-            this_row.set_style(tall_style)
-            for field in field_names:
-                each_cell = getattr(obj, field)
-                if field not in field_names2:
-                    if field in ['group', 'direction']:
-                        wb_sheet.write(line, column, each_cell.name, style)
+        group_names = Group.objects.filter().all().values_list("name", flat=True)
+        result_list = []
+        for group_name in group_names:
+            data_list = []
+            for obj in queryset:
+                if group_name == getattr(obj, 'group'):
+                    data_dict = dict()
+                    for field in field_names:
+                        each_cell = getattr(obj, field)
+                        if field not in field_names2:
+                            if field in ['group', 'direction']:
+                                data_dict.update({field: each_cell.name})
+                            else:
+                                data_dict.update({field: each_cell})
+                        else:
+                            data_dict.update({field: each_cell})
+                    data_list.append(data_dict)
+            result_list.append(data_list)
+        for data_list in result_list:
+            for data_dict in data_list:
+                column = 0
+                line = line + 1
+                this_row = wb_sheet.row(line)
+                this_row.set_style(tall_style)
+                for field in field_names:
+                    each_cell = data_dict.get(field)
+                    if field not in field_names2:
+                        if field in ['group', 'direction']:
+                            wb_sheet.write(line, column, each_cell, style)
+                        else:
+                            wb_sheet.write(line, column, each_cell, style)
                     else:
-                        wb_sheet.write(line, column, each_cell, style)
-                else:
-                    wb_sheet.write(line, column, each_cell, style1)
-                column = column + 1
-            # data = [f'{getattr(obj, field)}' for field in field_names]  # 将模型属性值的文本格式组成列表
-            # wb_sheet.append(data)  # 写入模型属性值
+                        wb_sheet.write(line, column, each_cell, style1)
+                    column = column + 1
         response = HttpResponse(content_type='application/vnd.ms-excel')
         filename = urlquote('工作日报')  # 导出数据 中文文件名称 变成下载.xls
         response['Content-Disposition'] = 'attachment;filename=%s' % filename + str(str_time) + '.xlsx'
