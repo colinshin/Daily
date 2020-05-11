@@ -11,7 +11,7 @@
  Target Server Version : 100309
  File Encoding         : 65001
 
- Date: 11/05/2020 07:58:45
+ Date: 12/05/2020 00:01:59
 */
 
 SET NAMES utf8mb4;
@@ -98,7 +98,7 @@ CREATE TABLE `auth_permission`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `auth_permission_content_type_id_codename_01ab375a_uniq`(`content_type_id`, `codename`) USING BTREE,
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_permission
@@ -147,6 +147,18 @@ INSERT INTO `auth_permission` VALUES (41, 'Can add 用户属性', 11, 'add_userp
 INSERT INTO `auth_permission` VALUES (42, 'Can change 用户属性', 11, 'change_userprofile');
 INSERT INTO `auth_permission` VALUES (43, 'Can delete 用户属性', 11, 'delete_userprofile');
 INSERT INTO `auth_permission` VALUES (44, 'Can view 用户属性', 11, 'view_userprofile');
+INSERT INTO `auth_permission` VALUES (45, 'Can add 公司', 12, 'add_company');
+INSERT INTO `auth_permission` VALUES (46, 'Can change 公司', 12, 'change_company');
+INSERT INTO `auth_permission` VALUES (47, 'Can delete 公司', 12, 'delete_company');
+INSERT INTO `auth_permission` VALUES (48, 'Can view 公司', 12, 'view_company');
+INSERT INTO `auth_permission` VALUES (49, 'Can add 用户属性', 13, 'add_project');
+INSERT INTO `auth_permission` VALUES (50, 'Can change 用户属性', 13, 'change_project');
+INSERT INTO `auth_permission` VALUES (51, 'Can delete 用户属性', 13, 'delete_project');
+INSERT INTO `auth_permission` VALUES (52, 'Can view 用户属性', 13, 'view_project');
+INSERT INTO `auth_permission` VALUES (53, 'Can add 地区', 14, 'add_region');
+INSERT INTO `auth_permission` VALUES (54, 'Can change 地区', 14, 'change_region');
+INSERT INTO `auth_permission` VALUES (55, 'Can delete 地区', 14, 'delete_region');
+INSERT INTO `auth_permission` VALUES (56, 'Can view 地区', 14, 'view_region');
 
 -- ----------------------------
 -- Table structure for auth_user
@@ -249,7 +261,7 @@ CREATE TABLE `django_admin_log`  (
   INDEX `django_admin_log_user_id_c564eba6_fk_auth_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of django_admin_log
@@ -304,6 +316,12 @@ INSERT INTO `django_admin_log` VALUES (47, '2020-05-10 22:41:39.027543', '5', '�
 INSERT INTO `django_admin_log` VALUES (48, '2020-05-10 22:42:03.462683', '4', '秦晋', 2, '[{\"changed\": {\"fields\": [\"Staff status\", \"Groups\", \"User permissions\"]}}]', 7, 1);
 INSERT INTO `django_admin_log` VALUES (49, '2020-05-10 22:42:31.368361', '3', 'UserProfile object (3)', 1, '[{\"added\": {}}]', 11, 1);
 INSERT INTO `django_admin_log` VALUES (50, '2020-05-10 22:42:48.164960', '4', 'UserProfile object (4)', 1, '[{\"added\": {}}]', 11, 1);
+INSERT INTO `django_admin_log` VALUES (51, '2020-05-11 23:33:51.790194', '1', '西安', 1, '[{\"added\": {}}]', 14, 1);
+INSERT INTO `django_admin_log` VALUES (52, '2020-05-11 23:33:56.721719', '2', '杭州', 1, '[{\"added\": {}}]', 14, 1);
+INSERT INTO `django_admin_log` VALUES (53, '2020-05-11 23:34:02.554545', '3', '成都', 1, '[{\"added\": {}}]', 14, 1);
+INSERT INTO `django_admin_log` VALUES (54, '2020-05-11 23:34:07.830389', '4', '上海', 1, '[{\"added\": {}}]', 14, 1);
+INSERT INTO `django_admin_log` VALUES (55, '2020-05-11 23:34:23.403928', '1', '泛舟科技', 1, '[{\"added\": {}}]', 12, 1);
+INSERT INTO `django_admin_log` VALUES (56, '2020-05-11 23:45:26.646953', '1', '八爪鱼', 1, '[{\"added\": {}}]', 13, 1);
 
 -- ----------------------------
 -- Table structure for django_content_type
@@ -315,7 +333,7 @@ CREATE TABLE `django_content_type`  (
   `model` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `django_content_type_app_label_model_76bd3d3b_uniq`(`app_label`, `model`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of django_content_type
@@ -325,10 +343,13 @@ INSERT INTO `django_content_type` VALUES (6, 'auth', 'group');
 INSERT INTO `django_content_type` VALUES (5, 'auth', 'permission');
 INSERT INTO `django_content_type` VALUES (7, 'auth', 'user');
 INSERT INTO `django_content_type` VALUES (8, 'contenttypes', 'contenttype');
+INSERT INTO `django_content_type` VALUES (12, 'paper', 'company');
 INSERT INTO `django_content_type` VALUES (1, 'paper', 'department');
 INSERT INTO `django_content_type` VALUES (2, 'paper', 'direction');
 INSERT INTO `django_content_type` VALUES (3, 'paper', 'group');
+INSERT INTO `django_content_type` VALUES (13, 'paper', 'project');
 INSERT INTO `django_content_type` VALUES (4, 'paper', 'record');
+INSERT INTO `django_content_type` VALUES (14, 'paper', 'region');
 INSERT INTO `django_content_type` VALUES (11, 'paper', 'userprofile');
 INSERT INTO `django_content_type` VALUES (10, 'sessions', 'session');
 
@@ -387,6 +408,23 @@ INSERT INTO `django_session` VALUES ('5vdulyc3gejsnlyy9fuhq3ptyo71qxhk', 'Njc1MG
 INSERT INTO `django_session` VALUES ('hxg4prhw5z1k12eete2txsqwqpu3wj2b', 'MmVlNzAxYzI1ZjVhYjQ1YzhjMWMwNTcxZGY3MTQ0ODk1Y2YxNDVmODp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJiN2ZiODM3NTg4ZGMwYjhlYjY4ODg1MTFkOTlhZmMwOWRmZDA3MjNiIn0=', '2020-05-20 22:07:06.480070');
 INSERT INTO `django_session` VALUES ('o138wweu8myk3hs3jtbp3c2si2231v08', 'MmVlNzAxYzI1ZjVhYjQ1YzhjMWMwNTcxZGY3MTQ0ODk1Y2YxNDVmODp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJiN2ZiODM3NTg4ZGMwYjhlYjY4ODg1MTFkOTlhZmMwOWRmZDA3MjNiIn0=', '2020-05-23 21:57:19.846734');
 INSERT INTO `django_session` VALUES ('q5kzggazbx0ckbvmbmwhe0mj7wjpro1d', 'ZGQ3MzRhMzJhNzZiODUwOTFkNmY3MTk2NDQwZTkyNzI3MGY0ZmQ0Mzp7Il9hdXRoX3VzZXJfaWQiOiIyIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI5YjM0NWI5ZDZkOWI0ZWVmZWEwNTA4Zjg5NzI3YmJjZjE4NzYzOTI1In0=', '2020-05-24 12:04:25.678447');
+
+-- ----------------------------
+-- Table structure for paper_company
+-- ----------------------------
+DROP TABLE IF EXISTS `paper_company`;
+CREATE TABLE `paper_company`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_time` datetime(6) NOT NULL,
+  `update_time` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of paper_company
+-- ----------------------------
+INSERT INTO `paper_company` VALUES (1, '泛舟科技', '2020-05-11 23:34:23.401928', '2020-05-11 23:34:23.401928');
 
 -- ----------------------------
 -- Table structure for paper_department
@@ -455,6 +493,23 @@ INSERT INTO `paper_group` VALUES (3, 'c/c++开发', '2020-05-10 22:37:41.799536'
 INSERT INTO `paper_group` VALUES (4, 'Java开发', '2020-05-10 22:37:56.705652', '2020-05-10 22:37:56.705652');
 
 -- ----------------------------
+-- Table structure for paper_project
+-- ----------------------------
+DROP TABLE IF EXISTS `paper_project`;
+CREATE TABLE `paper_project`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_time` datetime(6) NOT NULL,
+  `update_time` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of paper_project
+-- ----------------------------
+INSERT INTO `paper_project` VALUES (1, '八爪鱼', '2020-05-11 23:45:26.645969', '2020-05-11 23:45:26.645969');
+
+-- ----------------------------
 -- Table structure for paper_record
 -- ----------------------------
 DROP TABLE IF EXISTS `paper_record`;
@@ -471,6 +526,10 @@ CREATE TABLE `paper_record`  (
   `department_id` int(11) NOT NULL,
   `direction_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
+  `Overall` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `company` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `project` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `region` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `paper_record_creator_id_3d0b28d1_fk_auth_user_id`(`creator_id`) USING BTREE,
   INDEX `paper_record_department_id_0bfb7ad0_fk_paper_department_id`(`department_id`) USING BTREE,
@@ -481,6 +540,26 @@ CREATE TABLE `paper_record`  (
   CONSTRAINT `paper_record_direction_id_3f24b4a7_fk_paper_direction_id` FOREIGN KEY (`direction_id`) REFERENCES `paper_direction` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `paper_record_group_id_53ed5f41_fk_paper_group_id` FOREIGN KEY (`group_id`) REFERENCES `paper_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for paper_region
+-- ----------------------------
+DROP TABLE IF EXISTS `paper_region`;
+CREATE TABLE `paper_region`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_time` datetime(6) NOT NULL,
+  `update_time` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of paper_region
+-- ----------------------------
+INSERT INTO `paper_region` VALUES (1, '西安', '2020-05-11 23:33:51.789194', '2020-05-11 23:33:51.789194');
+INSERT INTO `paper_region` VALUES (2, '杭州', '2020-05-11 23:33:56.720733', '2020-05-11 23:33:56.720733');
+INSERT INTO `paper_region` VALUES (3, '成都', '2020-05-11 23:34:02.553545', '2020-05-11 23:34:02.553545');
+INSERT INTO `paper_region` VALUES (4, '上海', '2020-05-11 23:34:07.829389', '2020-05-11 23:34:07.829389');
 
 -- ----------------------------
 -- Table structure for paper_userprofile
@@ -495,23 +574,32 @@ CREATE TABLE `paper_userprofile`  (
   `direction_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   `employee_no` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `company_id` int(11) NULL DEFAULT NULL,
+  `project_id` int(11) NULL DEFAULT NULL,
+  `region_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `user_id`(`user_id`) USING BTREE,
   INDEX `paper_userprofile_depart_id_ff30a25b_fk_paper_department_id`(`depart_id`) USING BTREE,
   INDEX `paper_userprofile_direction_id_21c11217_fk_paper_direction_id`(`direction_id`) USING BTREE,
   INDEX `paper_userprofile_group_id_c853bd8e_fk_paper_group_id`(`group_id`) USING BTREE,
+  INDEX `paper_userprofile_company_id_4c1ebe73_fk_paper_company_id`(`company_id`) USING BTREE,
+  INDEX `paper_userprofile_project_id_4c1ebe73_fk_paper_project_id`(`project_id`) USING BTREE,
+  INDEX `paper_userprofile_region_id_4c1ebe73_fk_paper_region_id`(`region_id`) USING BTREE,
   CONSTRAINT `paper_userprofile_depart_id_ff30a25b_fk_paper_department_id` FOREIGN KEY (`depart_id`) REFERENCES `paper_department` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `paper_userprofile_direction_id_21c11217_fk_paper_direction_id` FOREIGN KEY (`direction_id`) REFERENCES `paper_direction` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `paper_userprofile_group_id_c853bd8e_fk_paper_group_id` FOREIGN KEY (`group_id`) REFERENCES `paper_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `paper_userprofile_user_id_4c1ebe73_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `paper_userprofile_user_id_4c1ebe73_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `paper_userprofile_company_id_4c1ebe73_fk_paper_company_id` FOREIGN KEY (`company_id`) REFERENCES `paper_company` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `paper_userprofile_project_id_4c1ebe73_fk_paper_project_id` FOREIGN KEY (`project_id`) REFERENCES `paper_project` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `paper_userprofile_region_id_4c1ebe73_fk_paper_region_id` FOREIGN KEY (`region_id`) REFERENCES `paper_region` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of paper_userprofile
 -- ----------------------------
-INSERT INTO `paper_userprofile` VALUES (1, '2020-05-10 22:39:09.144843', '2020-05-10 22:39:09.144843', 2, 3, 1, 1, 'XA1001');
-INSERT INTO `paper_userprofile` VALUES (2, '2020-05-10 22:39:26.298775', '2020-05-10 22:39:26.298775', 2, 2, 1, 2, 'XA1002');
-INSERT INTO `paper_userprofile` VALUES (3, '2020-05-10 22:42:31.366372', '2020-05-10 22:42:31.366372', 2, 4, 2, 3, 'XA1003');
-INSERT INTO `paper_userprofile` VALUES (4, '2020-05-10 22:42:48.163960', '2020-05-10 22:42:48.163960', 2, 5, 3, 4, 'XA1004');
+INSERT INTO `paper_userprofile` VALUES (1, '2020-05-10 22:39:09.144843', '2020-05-10 22:39:09.144843', 2, 3, 1, 1, 'XA1001', 1, 1, 1);
+INSERT INTO `paper_userprofile` VALUES (2, '2020-05-10 22:39:26.298775', '2020-05-10 22:39:26.298775', 2, 2, 1, 2, 'XA1002', 1, 1, 1);
+INSERT INTO `paper_userprofile` VALUES (3, '2020-05-10 22:42:31.366372', '2020-05-10 22:42:31.366372', 2, 4, 2, 3, 'XA1003', 1, 1, 1);
+INSERT INTO `paper_userprofile` VALUES (4, '2020-05-10 22:42:48.163960', '2020-05-10 22:42:48.163960', 2, 5, 3, 4, 'XA1004', 1, 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

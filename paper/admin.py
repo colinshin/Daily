@@ -4,22 +4,54 @@ import xlwt
 from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.http import urlquote
-from .models import Record, Department, Direction, Group, UserProfile,User
+from .models import Record, Department, Direction, Group, UserProfile, User, Project, Company, Region
 
 admin.site.site_title = "Daily Report"
 admin.site.site_header = "Daily Report"
 
 
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+
+    list_display = ('id', 'name')
+
+
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+
+    list_display = ('id', 'name')
+
+
+@admin.register(Region)
+class RegionAdmin(admin.ModelAdmin):
+
+    list_display = ('id', 'name')
+
+
 @admin.register(UserProfile)
-class ProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'employee_no', 'depart', 'group', 'direction')
+
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Hook for specifying custom readonly fields.
+        """
+        # 本想用 path 里的 add 来判断
+        print(request.path)
+        # 根据 obj 是否为空来判断
+        if obj:
+            self.readonly_fields = ["user"]
+        else:
+            self.readonly_fields = []
+        return self.readonly_fields
 
     # 新增或者修改数据时，设置外键的可选值
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        print(request.path)
         if db_field.name == 'user' and request.user.is_superuser:
             user_id_list = UserProfile.objects.filter().all().values_list('user_id', flat=True)
             kwargs["queryset"] = User.objects.exclude(id__in=user_id_list)
-        return super(ProfileAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        return super(UserProfileAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(Record)
@@ -28,7 +60,7 @@ class RecordAdmin(admin.ModelAdmin):
     list_display = ['name', 'department', 'employee_no', 'direction', 'task_progress', 'tomorrow_task',
                     'group', 'pub_date']
     list_filter = ('department',)  # 过滤器
-    exclude = ('creator', 'name', 'department', 'employee_no', 'direction', 'group')
+    exclude = ('creator', 'name', 'department', 'employee_no', 'direction', 'group', 'region', 'company', 'project')
     actions = ['export_excel']
     search_fields = ['name', 'employee_no', 'pub_date']
 
@@ -68,8 +100,8 @@ class RecordAdmin(admin.ModelAdmin):
     def export_excel(self, request, queryset):
         str_time = time.strftime("%Y%m%d", time.localtime())
         # field_names = [field.name for field in Record._meta.fields]  # 模型所有字段名
-        field_names = ['name', 'employee_no', 'group', 'task_progress',
-                       'tomorrow_task', 'direction']  # 模型所有字段名  'pub_date'
+        field_names = ['name', 'employee_no', 'group', 'task_progress', 'tomorrow_task', 'direction',
+                       'region', 'company', 'project']  # 模型所有字段名  'pub_date'
         field_names2 = ['task_progress', 'tomorrow_task']  # 模型所有字段名
         header_style = xlwt.XFStyle()  # 初始化来样式源百
         font2 = xlwt.Font()  # 为样式创建字体度
@@ -192,6 +224,9 @@ class RecordAdmin(admin.ModelAdmin):
             obj.department = userprofile.depart
             obj.group = userprofile.group
             obj.creator = request.user
+            obj.company = userprofile.company
+            obj.project = userprofile.project
+            obj.region = userprofile.region
         super(RecordAdmin, self).save_model(request, obj, form, change)
 
 
